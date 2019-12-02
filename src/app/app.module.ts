@@ -1,11 +1,18 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
 import { AppComponent } from "./app.component";
-
+import { ListEmployeesComponent } from "./employees/listEmployees.component";
+import { CreateEmployeeComponent } from "./employees/create-employye.component";
+let appRoutes: Routes = [
+  { path: "list", component: ListEmployeesComponent },
+  { path: "create", component: CreateEmployeeComponent },
+  { path: "", redirectTo: "/list", pathMatch: "full" }
+];
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule],
+  declarations: [AppComponent, ListEmployeesComponent, CreateEmployeeComponent],
+  imports: [BrowserModule, RouterModule.forRoot(appRoutes)],
   providers: [],
   bootstrap: [AppComponent]
 })
