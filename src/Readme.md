@@ -18,3 +18,17 @@ Use the --base-href option along with the ng build command as shown below. This 
 
 During development, if you want a different base path other than "/", simply execute the "ng serve" command with --base-href option set to your desired base path as shown below.
 ng serve -o --base-href /emp/
+
+################################################
+
+# 5
+
+There are 2 ways to create forms in Angular
+Template Driven Forms( form simple forms it is used)
+Model Driven Forms (Commonly called Reactive Forms)(Used for more Complex forms)
+
+# <form #employeeForm="ngForm" (ngSubmit)="saveEmployee(employeeForm)">
+
+#employeeForm is called the template reference variable. Notice we have assigned "ngForm" as the value for the template reference variable employeeForm. So employeeForm variable holds a reference to the form. When Angular sees a form tag, it automatically attaches the ngForm directive to it. The ngForm directive supplements the form element with additional features. It holds all the form controls that we create with ngModel directive and name attribute, and monitors their properties like value, dirty, touched, valid etc.
+
+http://csharp-video-tutorials.blogspot.com/2017/12/angular-forms-tutorial.html
