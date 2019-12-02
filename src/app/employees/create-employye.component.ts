@@ -6,7 +6,7 @@ import { ngForm } from "@angular/forms";
   styleUrls: ["create-employye.component.css"]
 })
 export class CreateEmployeeComponent {
-  gender = "male";
+  isAcive = true;
   saveEmployee(formDeatils: ngForm): void {
     console.log(formDeatils);
   }
