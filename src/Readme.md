@@ -72,3 +72,94 @@ we can do like this
 <option *ngFor="let dept of departments"
 value="dept.name">
 {{dept.name}}</option>
+
+#11
+Why is not a good practice to use the browser built-in DatePicker control
+Installing ngx-bootstrap
+Using ngx-bootstrap datepicker in Angular
+
+Why is not a good practice to use the browser built-in DatePicker control : This is because the implementation of datepicker is different from browser vendor to vendor. This means our end users may have different experience depending on the browser they use. Let us understand this with an example.
+
+On our "Create Employee" form we want to capture Date of Birth of an employee. Datepicker control is very useful in capturing dates from users. When we use the HTML5 input type date, the browser automatically displays it's built-in datepicker control. Include the following piece of HTML on "create-employee.component.html" file just below the "Department" field HTML
+
+<div class="form-group">
+  <label for="dateOfBirth">Date of Birth</label>
+  <input id="dateOfBirth" name="dateOfBirth" [(ngModel)]="dateOfBirth"
+          type="date" class="form-control" />
+</div>
+
+Notice we have set the input element type to date. At this point if we run the project and navigate to http://localhost:4200/create in Google chrome, we see the date-picker as shown below.
+
+Now, if we navigate to the same url in firefox, we see a date-picker control that is very different from the date-picker control that is on Google chrome browser.
+
+So, this means our end users have different experience depending on the browser they use. What we want here is consistency. There are many third party Date-picker controls that we can use, to provide consistent experience to our end users. ngx-bootstrap datepicker control is one of them.
+
+Please refer to the UI components section on the following page, to see the list of all third party UI components that we can use in Angular
+https://angular.io/resources
+
+Installing ngx-bootstrap : The following are the steps to install ngx-bootstrap
+
+Step 1 : Execute the following command to npm install ngx-bootstrap
+npm install ngx-bootstrap --save
+
+Step 2 : If you do not have Bootstrap installed, please install it using the following npm command. If you are following along we have already installed bootstrap in Part 1 of this Angular CRUD tutorial. So I am not going to execute this command again.
+npm install bootstrap@3 --save
+
+Please note : We are usng Bootstrap 3. We can also use Bootstrap 4 with ngx-bootstrap. Please refer to the documentation available at the following link on how to use Bootstrap 4 with ngx-bootstrap.
+https://valor-software.com/ngx-bootstrap/#/getting-started
+
+Step 3 : Once Bootstrap is installed, open .angular-cli.json file and specify the path to the Bootstrap stylesheet (bootstrap.min.css) in the styles property as shown below. Again, we have already done this
+
+"styles": [
+"../node_modules/bootstrap/dist/css/bootstrap.min.css",
+"styles.css"
+]
+
+Using ngx-bootstrap datepicker in Angular : The following are the steps to use ngx-bootstrap datepicker in Angular
+
+#Step 1 : In app.module.ts file, include the following import statement to import BsDatepickerModule
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
+Also, include BsDatepickerModule in the imports array of @NgModule decorator as shown below
+@NgModule({
+imports: [BsDatepickerModule.forRoot(),...]
+})
+
+#Step 2 : In "create-employee.component.html" file, make the following 2 changes to the HTML that displays the "Date of Birth" field
+Change the "type" attribute value from "date" to "text"
+Include "bsDatepicker" directive on the input element
+
+<div class="form-group">
+  <label for="dateOfBirth">Date of Birth</label>
+  <input id="dateOfBirth" name="dateOfBirth" [(ngModel)]="dateOfBirth"
+          type="text" bsDatepicker class="form-control" />
+</div>
+
+#Step 3 : Include a reference to the bs-datepicker.css file in .angular-cli.json file.
+
+"styles": [
+"../node_modules/bootstrap/dist/css/bootstrap.min.css",
+"../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+"styles.css"
+]
+
+At this point when you view the page in Google chrome or Firefox, you get the same datepicker and hence the same experience.
+
+When we select a date from the date-picker control, the "Date of Birth" textbox is automatically populated with the selected date and it is also captured by the angular generated form model.
+
+With this datepicker control, it is also very easy to capture a date range. For example, you have an open job role, and you want to capture a date range for accepting CV's, we can very easily do this. All we have to do is use bsDaterangepicker directive instead of bsDatepicker directive on the input element as shown below.
+
+<div class="form-group">
+  <label for="dateOfBirth">Date of Birth</label>
+  <input id="dateOfBirth" name="dateOfBirth" [(ngModel)]="dateOfBirth"
+          type="text" bsDaterangepicker class="form-control" />
+
+</div>
+
+The above simple change, will display Daterange picker as shown below. When we select a date range, the corresponding input field is automatically populated with the selected date range and it is also captured by the angular generated form model.
+
+At the moment, the Datepicker is using the default green theme. We want to change it to dark-blue theme, so it matches with the rest of the form.
+The date is captured in the textbox in mm/dd/yyyy format. We want to change it to dd/mm/yyyy format
+At the moment there is no default date. We want to set a default date
+The input element is spanning across the entire width of the form. We want to limit it's width
+Datepicker is a highly configurable component
