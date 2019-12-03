@@ -115,16 +115,20 @@
           >
         </select>
       </div>
-      <div class="form-group">
-        <label for="dateOfBirth">Date of Birth</label>
-        <input
-          id="dateOfBirth"
-          [(ngModel)]="dateOfBirth"
-          name="dateOfBirth"
-          type="text"
-          class="form-control"
-          bsDatepicker
-        />
+      <div class="row">
+        <div class="form-group col-md-5">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input
+            id="dateOfBirth"
+            [(ngModel)]="dateOfBirth"
+            name="dateOfBirth"
+            type="text"
+            class="form-control"
+            bsDatepicker
+            [bsConfig]="datePickerConfig"
+            placement="right"
+          />
+        </div>
       </div>
       <!-- to get range of of date picker in a calendar -->
       <!-- <div class="form-group">

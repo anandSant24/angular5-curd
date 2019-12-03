@@ -163,3 +163,59 @@ The date is captured in the textbox in mm/dd/yyyy format. We want to change it t
 At the moment there is no default date. We want to set a default date
 The input element is spanning across the entire width of the form. We want to limit it's width
 Datepicker is a highly configurable component
+
+#12 customising the ngx-bootstrap datepicker component with an example.
+
+Changing ngx-bootstrap datepicker theme : At the moment, the Datepicker is using the default green theme. We want to change it to dark-blue theme, so it matches with the rest of the form. As of this recording ngx-bootstrap datepicker component has the following 6 color schemes.
+theme-default
+theme-green
+theme-blue
+theme-dark-blue
+theme-red
+theme-orange
+
+We can change the default colour-scheme, by manipulating containerClass property in bsConfig object.
+
+Showing or hiding week numbers : By default, the weeknumber are displayed. If you want to hide them, all you have to do is set "showWeekNumbers" boolean property to false in the config object.
+
+constructor() {
+this.datePickerConfig = Object.assign({},
+{
+containerClass: 'theme-dark-blue',
+showWeekNumbers: false
+});
+}
+
+You can find all the properties of the config object at the following page.
+https://github.com/valor-software/ngx...
+
+Along the same lines we can also set the min and max dates. Please note that the month numbers start from 0 and not 1. So for January it is 0, February it is 1, so on and so forth.
+constructor() {
+this.datePickerConfig = Object.assign({},
+{
+containerClass: 'theme-dark-blue',
+showWeekNumbers: true,
+minDate: new Date(2018, 0, 1),
+maxDate: new Date(2018, 11, 31),
+});
+}
+
+To change the date format, use dateInputFormat property of the config object.
+
+constructor() {
+this.datePickerConfig = Object.assign({},
+{
+containerClass: 'theme-dark-blue',
+showWeekNumbers: true,
+minDate: new Date(2018, 0, 1),
+maxDate: new Date(2018, 11, 31),
+dateInputFormat: 'DD/MM/YYYY'
+});
+}
+
+To set a default date, create a property (dateOfBirth) in the component class and set it to the default value you want. Since we are using 2 way databinding, the defualt date is displayed in the corresponding input field when them form loads. In this case we have set default date to January 30, 2018.
+dateOfBirth: Date = new Date(2018, 0, 30);
+
+At the moment, the "Date of Birth" input element is spanning across the entire width of the form. There are sevral options to limit it's width. One option is to use the Bootstrap row and grid classes (Example: col-md-4, col-md-5, etc...)
+
+To control the placement of the Datepicker use the placement property. The allowed values are "top" | "bottom" | "left" | "right". The default is "bottom".
