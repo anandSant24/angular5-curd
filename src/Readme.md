@@ -57,4 +57,18 @@ Another important point to keep in mind. By default, disabled form controls are 
 
 In our form, we do not want any radio button to be disabled, so please remove the disabled attribute.
 
-#8
+#ToDo
+9 Need to find out why auto default select is not working as part of select
+
+#10 Angular select option from an array
+
+##NOTE ##
+
+<option \*ngFor="let dept of departments"
+[value]="dept.id">
+{{dept.name}}</option>
+We are binding dept.id with using [ ] so that we will get the property value of dept.id , if we are binding with string literal then we don't need [ ] square brackets
+we can do like this
+<option *ngFor="let dept of departments"
+value="dept.name">
+{{dept.name}}</option>
