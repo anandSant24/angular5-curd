@@ -219,3 +219,78 @@ dateOfBirth: Date = new Date(2018, 0, 30);
 At the moment, the "Date of Birth" input element is spanning across the entire width of the form. There are sevral options to limit it's width. One option is to use the Bootstrap row and grid classes (Example: col-md-4, col-md-5, etc...)
 
 To control the placement of the Datepicker use the placement property. The allowed values are "top" | "bottom" | "left" | "right". The default is "bottom".
+
+#13
+Angular ngIf structural directive with an example
+How to prevent a button from submitting form
+
+Here is what we want to do : When the Create Employee form first loads, we want to display a field to enter "Photo Path" and "Show Preview" button
+
+For now, we will assume employee photo is already available in the assets/images folder. We will discuss uploading files in a later video in this series. 
+
+Once the user has typed the photo path in the respective field, and when they click "Show Preview" button, we want to display the photo and the text on the button should change to "Hide Preview". 
+
+At this point when the employee clicks "Hide Preview" button, the photo should be hidden and the text on the button should change again back to "Show Preview".
+
+Here are the steps to achieve this
+
+Step 1 : First include an input field for capturing employee photo path. As we have set both the name property and ngModel directive to photoPath, Angular generated form model will create a property with name "photoPath" and keeps track of what is typed in the photoPath textbox.
+
+<div class="form-group">
+  <label for="photoPath">Photo Path</label>
+  <input id="photoPath" type="text" class="form-control"
+          name="photoPath" [(ngModel)]="photoPath">
+</div>
+
+Step 2 : Include image element to preview the employee photo. Notice we have set height and width to 200 pixles. Also notice we are binding the img element src property to the photoPath property.
+
+<div class="form-group">
+  <img [src]="photoPath" height="200" width="200" />
+</div>
+
+With the above 2 changes in place, view the page in the browser and launch browser developer tools. On the console tab, you will see the following error. This is because, when the form loads, photoPath property is null and we have bound it to the src property of the img element. 
+Failed to load resource: the server responded with a status of 404 (Not Found)
+
+At this point, as you start to type in the "Photo Path" textbox, you will see a 404 error logged to the console every time you type a character. This is because every time a character is typed, angular tries to bind the src property of the image element to the photoPath property, Since we have not completed typing the full valid photo path, Angular is not able to find the image and it logs a 404 error to the console. Once we complete typing the valid photo path, the photo is displayed.
+
+
+Step 3 : We do not want to render the image element when the form first loads. So create a boolen property with name previewPhoto in the CreateEmployeeComponent class and initialise it to false.
+
+previewPhoto = false;
+
+Step 4 : In the view template (i.e in create-employee.component.html) file, include *ngIf structural directive on the image element. Notice the expression assigned to *ngIf directive. It is the boolean property (previewPhoto) we created in the component class. If the value of the expression is truthy then the image element is rendered in the DOM otherwise it is not. Since we have initialised previewPhoto with false, the image element will not be rendered when the form is initially loaded.
+
+<img [src]="photoPath" height="200" width="200" *ngIf="previewPhoto"/>
+
+At this point, view the page in the browser and launch browser developer tools. On the console tab, you will not see any errors on the initial form load. Also, when you start to type in the Photo Path field, you do not see any 404 errors in spite of having the img element bound to photoPath property. This is because the *ngIf structural directive prevented the img element from being added to the DOM as it's value is falsy. 
+
+Step 5 : Now we need to include a button to Show and Hide Image Preview. In the view template, include the following HTML.
+
+<div class="form-group">
+  <button (click)="togglePhotoPreview()" class="btn btn-primary">
+    {{previewPhoto ? "Hide " : "Show " }} Preview
+  </button>
+</div>
+
+Code explanation : 
+On the button click, we are calling "togglePhotoPreview()" method. This is event binding. We discussed Event Binding in Part 14 of Angular 2 tutorial. 
+We have not created togglePhotoPreview() method. We will create it in out next step.
+We are using the Bootstrap btn and btn-primary classes for styling
+We are using interpolation to dynamically change the button text. 
+Step 6 : In the component class, create togglePhotoPreview() method. Notice this method toggles the value of previewPhoto property.
+
+togglePhotoPreview() {
+  this.previewPhoto = !this.previewPhoto;
+}
+At this point, view the page in the browser and launch browser developer tools. Type a valid photo path and click "Show Preview" button.
+The image will be displayed and the text on the button changes to "Hide Privew" as expected.
+If you look on the console tab, you will see that the Angular generated form model is logged to the console. We did not expect this to happen. 
+The code to log the employee form values is in the saveEmployee() method and this method should only be called when we click the "Save" button.
+So the question that comes to our mind is, why is the form being submitted when we click "Show Preview" or "Hide Preview" button.
+This is because of the way we have created the button. If we do not explicitly specify the button type attribute, the button behaves like the "Submit" button and hence the code in the "saveEmployee()" method is also executed.
+To prevent this, explicitly set the type attribute of the button to "button". This prevents the button from behaving as a Submit button.
+<div class="form-group">
+  <button type="button" (click)="togglePhotoPreview()" class="btn btn-primary">
+    {{previewPhoto ? "Hide " : "Show " }} Preview
+  </button>
+</div>

@@ -130,6 +130,28 @@
           />
         </div>
       </div>
+      <div class="form-group">
+        <label for="photoPath">Photo Path</label>
+        <input
+          id="photoPath"
+          name="photoPath"
+          [(ngModel)]="photoPath"
+          type="text"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        Note: If we don't of type attribute as part of the button then it will
+        submit the form to fix this provide type attribute to the button alway
+        as shown below
+        <button (click)="togglePreviewPhoto()" class="btn btn-primary">
+          {{showPreview? "hide" : 'Show'}} Preview
+        </button>
+      </div>
+      <div class="form-group">
+        <img *ngIf="showPreview" [src]="photoPath" height="100" widht="100" />
+      </div>
+
       <!-- to get range of of date picker in a calendar -->
       <!-- <div class="form-group">
         <label for="dateOfBirth">Date of Birth</label>
