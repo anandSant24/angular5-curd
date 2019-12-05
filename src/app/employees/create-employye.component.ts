@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ngForm } from "@angular/forms";
+import { NgForm } from "@angular/forms";
 import { Department } from "../models/department.model";
 import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 
@@ -9,7 +9,7 @@ import { BsDatepickerConfig } from "ngx-bootstrap/datepicker";
 })
 export class CreateEmployeeComponent implements OnInit {
   showPreview = false;
-
+  gender:string="male";
   togglePreviewPhoto(): void {
     this.showPreview = !this.showPreview;
   }
@@ -38,7 +38,7 @@ export class CreateEmployeeComponent implements OnInit {
 
   ngOnInit() {}
 
-  saveEmployee(formDeatils: ngForm): void {
+  saveEmployee(formDeatils: NgForm): void {
     console.log(formDeatils.value);
   }
 }

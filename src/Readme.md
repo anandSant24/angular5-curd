@@ -226,9 +226,9 @@ How to prevent a button from submitting form
 
 Here is what we want to do : When the Create Employee form first loads, we want to display a field to enter "Photo Path" and "Show Preview" button
 
-For now, we will assume employee photo is already available in the assets/images folder. We will discuss uploading files in a later video in this series. 
+For now, we will assume employee photo is already available in the assets/images folder. We will discuss uploading files in a later video in this series.
 
-Once the user has typed the photo path in the respective field, and when they click "Show Preview" button, we want to display the photo and the text on the button should change to "Hide Preview". 
+Once the user has typed the photo path in the respective field, and when they click "Show Preview" button, we want to display the photo and the text on the button should change to "Hide Preview".
 
 At this point when the employee clicks "Hide Preview" button, the photo should be hidden and the text on the button should change again back to "Show Preview".
 
@@ -248,11 +248,10 @@ Step 2 : Include image element to preview the employee photo. Notice we have set
   <img [src]="photoPath" height="200" width="200" />
 </div>
 
-With the above 2 changes in place, view the page in the browser and launch browser developer tools. On the console tab, you will see the following error. This is because, when the form loads, photoPath property is null and we have bound it to the src property of the img element. 
+With the above 2 changes in place, view the page in the browser and launch browser developer tools. On the console tab, you will see the following error. This is because, when the form loads, photoPath property is null and we have bound it to the src property of the img element.
 Failed to load resource: the server responded with a status of 404 (Not Found)
 
 At this point, as you start to type in the "Photo Path" textbox, you will see a 404 error logged to the console every time you type a character. This is because every time a character is typed, angular tries to bind the src property of the image element to the photoPath property, Since we have not completed typing the full valid photo path, Angular is not able to find the image and it logs a 404 error to the console. Once we complete typing the valid photo path, the photo is displayed.
-
 
 Step 3 : We do not want to render the image element when the form first loads. So create a boolen property with name previewPhoto in the CreateEmployeeComponent class and initialise it to false.
 
@@ -260,9 +259,9 @@ previewPhoto = false;
 
 Step 4 : In the view template (i.e in create-employee.component.html) file, include *ngIf structural directive on the image element. Notice the expression assigned to *ngIf directive. It is the boolean property (previewPhoto) we created in the component class. If the value of the expression is truthy then the image element is rendered in the DOM otherwise it is not. Since we have initialised previewPhoto with false, the image element will not be rendered when the form is initially loaded.
 
-<img [src]="photoPath" height="200" width="200" *ngIf="previewPhoto"/>
+<img [src]="photoPath" height="200" width="200" \*ngIf="previewPhoto"/>
 
-At this point, view the page in the browser and launch browser developer tools. On the console tab, you will not see any errors on the initial form load. Also, when you start to type in the Photo Path field, you do not see any 404 errors in spite of having the img element bound to photoPath property. This is because the *ngIf structural directive prevented the img element from being added to the DOM as it's value is falsy. 
+At this point, view the page in the browser and launch browser developer tools. On the console tab, you will not see any errors on the initial form load. Also, when you start to type in the Photo Path field, you do not see any 404 errors in spite of having the img element bound to photoPath property. This is because the \*ngIf structural directive prevented the img element from being added to the DOM as it's value is falsy.
 
 Step 5 : Now we need to include a button to Show and Hide Image Preview. In the view template, include the following HTML.
 
@@ -272,25 +271,122 @@ Step 5 : Now we need to include a button to Show and Hide Image Preview. In the 
   </button>
 </div>
 
-Code explanation : 
-On the button click, we are calling "togglePhotoPreview()" method. This is event binding. We discussed Event Binding in Part 14 of Angular 2 tutorial. 
+Code explanation :
+On the button click, we are calling "togglePhotoPreview()" method. This is event binding. We discussed Event Binding in Part 14 of Angular 2 tutorial.
 We have not created togglePhotoPreview() method. We will create it in out next step.
 We are using the Bootstrap btn and btn-primary classes for styling
-We are using interpolation to dynamically change the button text. 
+We are using interpolation to dynamically change the button text.
 Step 6 : In the component class, create togglePhotoPreview() method. Notice this method toggles the value of previewPhoto property.
 
 togglePhotoPreview() {
-  this.previewPhoto = !this.previewPhoto;
+this.previewPhoto = !this.previewPhoto;
 }
 At this point, view the page in the browser and launch browser developer tools. Type a valid photo path and click "Show Preview" button.
 The image will be displayed and the text on the button changes to "Hide Privew" as expected.
-If you look on the console tab, you will see that the Angular generated form model is logged to the console. We did not expect this to happen. 
+If you look on the console tab, you will see that the Angular generated form model is logged to the console. We did not expect this to happen.
 The code to log the employee form values is in the saveEmployee() method and this method should only be called when we click the "Save" button.
 So the question that comes to our mind is, why is the form being submitted when we click "Show Preview" or "Hide Preview" button.
 This is because of the way we have created the button. If we do not explicitly specify the button type attribute, the button behaves like the "Submit" button and hence the code in the "saveEmployee()" method is also executed.
 To prevent this, explicitly set the type attribute of the button to "button". This prevents the button from behaving as a Submit button.
+
 <div class="form-group">
   <button type="button" (click)="togglePhotoPreview()" class="btn btn-primary">
     {{previewPhoto ? "Hide " : "Show " }} Preview
   </button>
 </div>
+
+#14 disable browser native validation
+By default Angular 4 and later versions disable browser native validation. How to enable browser validation using ngNativeValidate directive
+How to explicitly disable the native browser validation using the novalidate attribute if you are using Angular 2.
+Why is it better to disable browser built-in validation and use Angular to validate instead
+
+To understand browser native validation,
+On the "Create Employee" view template, include required attribute on FullName input field
+
+Navigate to the "Create Employee" form and launch browser developer tools.
+
+Do not type anything in the "Full Name" input field click the "Save" button.
+
+Notice we do not get any validation, in spite of having required attribute on the "Full Name" input field.
+
+This is because by default, Angular 4 and later versions disable browser validation by including novalidate attribute on the form tag.
+
+To confirm this, click on the "Elements" tab in the browser developer tools and you will see "novalidate" attribute on the form tag
+
+If you want to enable browser validation, include ngNativeValidate directive on the form tag in create-employee.component.html file
+
+<form #employeeForm="ngForm" ngNativeValidate
+      (ngSubmit)="saveEmployee(employeeForm)">
+
+At this point, if you click the "Save" button without typing anything in the Full Name field, the native browser validation kicks in and you will see "Please fill in this field" validation error. At the moment I am using Google Chrome browser.
+
+#15 Displaying angular form validation error messages
+How to display validation error messages to the user
+Style the error messages using Bootstrap 
+How to disable Submit button if the form is not valid
+
+This is continuation to Part 15. Please watch Part 15 from Angular CRUD tutorial before proceeding.
+
+
+Here is what we want to do. If the "Full Name" field is not valid we want to style the input field with a red border. The associated label text should also turn red and "Full Name is required" validation error message should be displayed.
+
+Once we type something in the Full Name field, and when it becomes valid, the validation message and the red broder should disappear and also the label text should return to it's normal black colourcolour.
+
+We will be using the Bootstrap framework for styling validation error messages. If you are new to Bootstrap, please check out our Bootstrap tutorial by clicking here.
+
+We discussed Bootstrap form validation states in Part 23 of Bootstrap tutorial. We will use the following Bootstrap classes for styling validation error messages.
+has-error
+control-label
+help-block
+Modify the "Full name" input filed as shown below.
+
+<div class="form-group" [class.has-error]="fullNameControl.invalid">
+  <label for="fullName" class="control-label">Full Name</label>
+  <input id="fullName" required type="text" class="form-control" name="fullName"
+         [(ngModel)]="fullName" #fullNameControl="ngModel">
+  <span class="help-block" *ngIf="fullNameControl.invalid">
+    Full Name is required
+  </span>
+</div>
+
+Code explanation :
+[class.has-error]="fullNameControl.invalid. This is class binding in angular. If the invalid property returns true, then the Bootstrap class has-error is added to the div element, if it is false then the class is removed.
+
+On the "Full Name" label element we applied control-label Bootstrap class. This class turns the label text to red if there is a validation error.
+
+*ngIf="fullNameControl.invalid". The *ngIf structural directive on the span element adds or removes the validation error message depending on the invalid property value. If the invalid property is true, then the validation error message is displayed, otherwise it is removed. Also, notice we are using the Bootstrap help-block class on the span element for styling.
+At this point, save the changes and view the page in the browser. Notice when the form initially loads, we see the validation error message Full Name is required and it is also styled as expected. As we soon as we start typing, the error goes away. When we delete everything that we have typed, the error appears again. So, it's working as expected.
+
+Let's enhance this a bit more. Some users does not like to see the validation error messages, even before they had the opportunity to touch the form field. So what we want to do is, 
+Do not display any validation error messages when the form is initially loaded. 
+When the user touches the field, and if he leaves the field without typing in the value, then we want to display the validation error message. 
+This is easy. You might have already guessed we could use touched property to achieve this. So modify the Full Name field HTML as shown below. With this change, the validation error message is displayed only when the Full Name field is invalid and touched.
+
+<div class="form-group"
+     [class.has-error]="fullNameControl.invalid && fullNameControl.touched">
+  <label for="fullName" class="control-label">Full Name</label>
+  <input id="fullName" required type="text" class="form-control" name="fullName"
+         [(ngModel)]="fullName" #fullNameControl="ngModel">
+  <span class="help-block"
+        *ngIf="fullNameControl.invalid && fullNameControl.touched">
+    Full Name is required
+  </span>
+</div>
+
+To take this to the next level, we can style a valid field with a different colour. Here is what I mean.
+
+When the form first loads, the Full Name and it's label are black in colour and the validation error message is not displayed
+When the user touches the field and leaves it without typing anything, the colour changes to red and the validation error message is displayed
+If the user types something, the field is valid, so we want a green border and the label text should also turn green.
+To achieve this we can use the Bootstrap has-success class as shown below. As you can see, the has-success class is added when valid property is true and it is removed when it is false. 
+
+<div class="form-group"
+     [class.has-error]="fullNameControl.invalid && fullNameControl.touched"
+     [class.has-success]="fullNameControl.valid">
+
+As you can see these angular validation properties (valid, touched, dirty etc.) provide lot of power and flexibility when validating form fields and displaying validation error messages.
+
+How to disable Submit button if the form is not valid : To disable the "Save" button when the form is not valid, bind the invalid property of the employeeForm template variable to the disabled property of the button.
+
+<button class="btn btn-primary" type="submit"
+[disabled]="employeeForm.invalid">Save</button>
