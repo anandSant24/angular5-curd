@@ -9,7 +9,7 @@ import { CreateEmployeeComponent } from "./employees/create-employye.component";
 let appRoutes: Routes = [
   { path: "list", component: ListEmployeesComponent },
   { path: "create", component: CreateEmployeeComponent },
-  { path: "", redirectTo: "/list", pathMatch: "full" }
+  { path: "", redirectTo: "/create", pathMatch: "full" }
 ];
 @NgModule({
   declarations: [AppComponent, ListEmployeesComponent, CreateEmployeeComponent],

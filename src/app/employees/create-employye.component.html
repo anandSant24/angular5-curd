@@ -1,51 +1,75 @@
-<form ngNativeValidate #employeeForm="ngForm" (ngSubmit)="saveEmployee(employeeForm)">
+<form
+  ngNativeValidate
+  #employeeForm="ngForm"
+  (ngSubmit)="saveEmployee(employee)"
+>
   <!-- Consider the following line of code
     <form #employeeForm="ngForm" (ngSubmit)="saveEmployee(employeeForm)"> -->
 
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h3 class="panel-title">Create Employee</h3>
+      <h4>Make the image work after 7PM , Dec 5</h4>
     </div>
     <div class="panel-body">
-    <!-- to dispaly error message if form is invlid -->
-      <div class="form-group" [class.has-error]="fullNameControl.invalid && fullNameControl.touched">
+      <!-- to dispaly error message if form is invlid -->
+      <div class="form-group" [class.has-error]="name.invalid && name.touched">
         <!-- to get the focus lets associate it with the its associated Full name input 
       and when we click on label it will focus the input element -->
-        <label for="fullName" class="control-label">Full Name</label>
+        <label for="name" class="control-label">Full Name</label>
         <input
-          id="fullName"
-          [(ngModel)]="fullName"
-          name="fname"
+          id="name"
+          [(ngModel)]="employee.name"
+          name="name"
           type="text"
           class="form-control"
-          #fullNameControl="ngModel"
+          #name="ngModel"
           required
         />
         <!-- Conditionally display this only if there are errors -->
-        <span class="help-block" *ngIf="fullNameControl.invalid && fullNameControl.touched">
+        <span class="help-block" *ngIf="name.invalid && name.touched">
           Full Name is required
         </span>
       </div>
-      <div class="form-group">
+      <div
+        class="form-group"
+        [class.has-error]="email.invalid && email.touched"
+      >
         <label for="email">Email</label>
         <input
+          [required]="contactPreferences.value==='email'"
           id="email"
-          [(ngModel)]="email"
+          [(ngModel)]="employee.email"
           name="email"
           type="email"
           class="form-control"
+          #email="ngModel"
         />
+        <span class="help-block" *ngIf="email.errors?.required">
+          Email Required
+        </span>
       </div>
-      <div class="form-group">
+      <div
+        class="form-group"
+        [class.has-error]="employeePhone.touched && employeePhone.errors?.required"
+      >
         <label for="email">Phone Number</label>
         <input
+          [required]="contactPreferences.value ==='phone'"
           id="phone"
-          [(ngModel)]="phone"
+          [(ngModel)]="employee.phone"
           name="phone"
           type="text"
           class="form-control"
+          #employeePhone="ngModel"
         />
+        <span
+          class="help-block"
+          *ngIf="employeePhone.errors?.required && employeePhone.touched"
+          >Phone number is Required</span
+        >
       </div>
+
       <div class="form-group">
         <label>Contact Preference</label>
         <div class="form-control">
@@ -54,7 +78,8 @@
               type="radio"
               name="contactPreference"
               value="email"
-              [(ngModel)]="contactPreference"
+              [(ngModel)]="employee.contactPreference"
+              #contactPreferences="ngModel"
             />
             Email
           </label>
@@ -63,10 +88,11 @@
               type="radio"
               name="contactPreference"
               value="phone"
-              [(ngModel)]="contactPreference"
+              [(ngModel)]="employee.contactPreference"
             />
             Phone
           </label>
+          Contact preference selected is : {{contactPreferences.value}}
         </div>
       </div>
       <div class="form-group">
@@ -77,7 +103,7 @@
               type="radio"
               value="male"
               name="gender"
-              [(ngModel)]="gender"
+              [(ngModel)]="employee.gender"
             />
             Male
           </label>
@@ -86,7 +112,7 @@
               type="radio"
               value="female"
               name="gender"
-              [(ngModel)]="gender"
+              [(ngModel)]="employee.gender"
             />
             Female
           </label>
@@ -99,8 +125,7 @@
             <input
               type="checkbox"
               name="isAcive"
-              [(ngModel)]="isAcive"
-              disabled
+              [(ngModel)]="employee.isAcive"
             />
             <!--Note:  disabled form attribute are not included in form model -->
             <!-- checked attribute doesn't work with ngModel so use component to the form to be checked -->
@@ -114,7 +139,7 @@
         <select
           id="department"
           name="department"
-          [(ngModel)]="department"
+          [(ngModel)]="employee.department"
           class="form-control"
         >
           <option *ngFor="let dept of departments" [value]="dept.id">
@@ -127,7 +152,7 @@
           <label for="dateOfBirth">Date of Birth</label>
           <input
             id="dateOfBirth"
-            [(ngModel)]="dateOfBirth"
+            [(ngModel)]="employee.dateOfBirth"
             name="dateOfBirth"
             type="text"
             class="form-control"
@@ -142,7 +167,7 @@
         <input
           id="photoPath"
           name="photoPath"
-          [(ngModel)]="photoPath"
+          [(ngModel)]="employee.photoPath"
           type="text"
           class="form-control"
         />
@@ -156,7 +181,12 @@
         </button>
       </div>
       <div class="form-group">
-        <img *ngIf="showPreview" [src]="photoPath" height="100" widht="100" />
+        <img
+          *ngIf="showPreview"
+          [src]="employee.photoPath"
+          height="100"
+          widht="100"
+        />
       </div>
 
       <!-- to get range of of date picker in a calendar -->
@@ -172,10 +202,20 @@
         />
       </div> -->
     </div>
-    <div class="panel-footer" >
-    <!-- To Disable button if form is invalid [disabled]="employeeForm.invalid"-->
-      <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Save</button>
+    <div class="panel-footer">
+      <!-- To Disable button if form is invalid [disabled]="employeeForm.invalid"-->
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="employeeForm.invalid"
+      >
+        Save
+      </button>
     </div>
   </div>
 </form>
 Angular Generated : {{employeeForm.value | json}}
+
+<br />
+<br />
+Our Employee Generated: {{employee | json }}

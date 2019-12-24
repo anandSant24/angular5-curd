@@ -390,3 +390,87 @@ How to disable Submit button if the form is not valid : To disable the "Save" bu
 
 <button class="btn btn-primary" type="submit"
 [disabled]="employeeForm.invalid">Save</button>
+
+
+
+#17 Model binding in angular template
+
+Binding Angular form to our own model class
+We will also discuss, how to fix one of the common error that we get when exporting ngModel into a local variable. The error that we get is, cannot assign to a reference or variable.
+
+At the moment, in CreateEmployeeComponent we are using the Angular Auto-generated form model. Instead of using the Angular generated form model, we can use our model class.
+
+
+In employee.model.ts file in the models folder, we have Employee class. We want to use this class as the model when creating a new employee. Here are the steps.
+
+Step 1 : In create-employee.component.ts file, import the Employee model
+import { Employee } from '../models/employee.model';
+
+Step 2 : In CreateEmployeeComponent class, include employee property. Notice we have set the type to Employee and initialised all properties with NULL value.
+
+export class CreateEmployeeComponent implements OnInit {
+  employee: Employee = {
+    id: null,
+    name: null,
+    gender: null,
+    contactPreference: null,
+    phoneNumber: null,
+    email: null,
+    dateOfBirth: null,
+    department: null,
+    isActive: null,
+    photoPath: null
+  };
+
+Step 3 : In the view template, bind the ngModel directive of an input field to it's corresponding property on the employee object. The employee property we created in Step 2 returns an employee object, which is the model for our form.
+
+For example, bind ngModel directive on the email input field to the email property on the employee object.
+[(ngModel)]="employee.email"
+
+Except fullName, bind the ngModel directive of the rest of the input fields with the corresponding properties on the employee object.
+
+In the employee class we do not have fullName property. we have name instead. On the view template, the corresponding input field name is fullName. To keep things consistent let's change fullName to name on the label and the input field as shown below.
+
+<div class="form-group" [class.has-error]="name.invalid && name.touched">
+  <label for="name" class="control-label">Name</label>
+  <input id="name" required type="text" class="form-control" name="name"
+         [(ngModel)]="name" #name="ngModel">
+  <span class="help-block" *ngIf="name.invalid && name.touched">
+    Name is required
+  </span>
+</div>
+
+At this point, if you view the page in the browser, you will see the following error.
+Cannot assign to a reference or variable
+
+We get this error because, Angular generated form model creates name property and we are also creating a local template variable with the same name by exporting ngModel to #name. Hence we get the error - Cannot assign to a reference or variable.
+
+One way to fix this error is, by giving our local template reference variable a different name other than name. So if we change #name="ngModel" to #nameControl="noModel" the error goes away. We discussed this in detail in Part 15 of Angular CRUD tutorial.
+
+The other way to fix this error is by using our own model. Using the ngModel directive, bind the name property of the employee object to the name input field
+
+[(ngModel)]="employee.name"
+
+At this point, if you view the page in the browser and notice the error is gone and all the properties in the Angular generated form model are NULL as expected.
+
+To see our own employee model, include the following code in the view template file (create-employee.component.html)
+
+Angular Generated Forom Model : {{employeeForm.value | json}}
+<br/>
+<br/>
+Our Employee Model : {{ employee | json}}
+
+At this point, on the browser we should see both - Angular generated form model and our own employee model. Notice as we change the values in the input fields, the respective properties in both the models are updated as expected.
+
+At the moment, when we click the "Save" button, we are logging the employeeForm.value to the console. We instead want to log our employee model object. To do this 
+In the view template, pass the employee object to the saveEmployee() method.
+
+<form #employeeForm="ngForm" (ngSubmit)="saveEmployee(employee)">
+
+Modify saveEmployee() method in create-employee.component.ts file as shown below.
+
+saveEmployee(newEmployee: Employee): void {
+  console.log(newEmployee);
+}
+
+At this point, when we click the Save button, the employee object is logged to the console as expected.
