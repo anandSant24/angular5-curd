@@ -118,14 +118,19 @@
           </label>
         </div>
       </div>
+
       <div class="form-group">
         <label>Gender</label>
-        <div class="form-control">
-          <label>
+        <div
+          class="form-control"
+          [class.has-error]="isActive.invalid && isActive.touched"
+        >
+          <label class="checkbox-inline control-label">
             <input
               type="checkbox"
-              name="isAcive"
-              [(ngModel)]="employee.isAcive"
+              name="isActive"
+              [(ngModel)]="employee.isActive"
+              #isActive="ngModel"
             />
             <!--Note:  disabled form attribute are not included in form model -->
             <!-- checked attribute doesn't work with ngModel so use component to the form to be checked -->
@@ -133,7 +138,13 @@
             is Active
           </label>
         </div>
+        <span
+          class="help-block"
+          *ngIf="isActive.errors?.required && isAcive.touched"
+          >select isActive</span
+        >
       </div>
+
       <div class="form-group">
         <label for="department">Department</label>
         <select
